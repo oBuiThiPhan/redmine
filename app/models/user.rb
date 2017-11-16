@@ -67,6 +67,26 @@ class User < Principal
         :order => %w(login id),
         :setting_order => 8
       },
+    :lastinitial_dot_firstname => {
+        :string => '#{lastname.split.map(&:first).join.upcase}.#{firstname}',
+        :order => %w(lastname firstname id),
+        :setting_order => 9
+      },
+    :lastinitial_firstinitial_fullname => {
+        :string => '#{lastname.split.map(&:first).join.upcase}#{firstname.split.map(&:first).join.upcase}(#{lastname} #{firstname})',
+        :order => %w(lastname firstname id),
+        :setting_order => 10
+      },
+    :firstinitial_lastinitial_fullname => {
+        :string => '#{firstname.split.map(&:first).join.upcase}#{lastname.split.map(&:first).join.upcase}(#{firstname} #{lastname})',
+        :order => %w(lastname firstname id),
+        :setting_order => 11
+      },
+    :firstname_lastinitial_fullname => {
+        :string => '#{firstname}#{lastname.split.map(&:first).join.upcase}(#{lastname} #{firstname})',
+        :order => %w(lastname firstname id),
+        :setting_order => 12
+      },
   }
 
   MAIL_NOTIFICATION_OPTIONS = [
@@ -604,24 +624,24 @@ class User < Principal
     # eg. project.children.visible(user)
     Project.unscoped do
       return @project_ids_by_role if @project_ids_by_role
-  
+
       group_class = anonymous? ? GroupAnonymous : GroupNonMember
       group_id = group_class.pluck(:id).first
-  
+
       members = Member.joins(:project, :member_roles).
         where("#{Project.table_name}.status <> 9").
         where("#{Member.table_name}.user_id = ? OR (#{Project.table_name}.is_public = ? AND #{Member.table_name}.user_id = ?)", self.id, true, group_id).
         pluck(:user_id, :role_id, :project_id)
-  
+
       hash = {}
       members.each do |user_id, role_id, project_id|
         # Ignore the roles of the builtin group if the user is a member of the project
         next if user_id != id && project_ids.include?(project_id)
-  
+
         hash[role_id] ||= []
         hash[role_id] << project_id
       end
-  
+
       result = Hash.new([])
       if hash.present?
         roles = Role.where(:id => hash.keys).to_a

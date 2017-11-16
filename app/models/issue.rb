@@ -125,7 +125,9 @@ class Issue < ActiveRecord::Base
           '1=1'
         when 'default'
           user_ids = [user.id] + user.groups.map(&:id).compact
-          "(#{table_name}.is_private = #{connection.quoted_false} OR #{table_name}.author_id = #{user.id} OR #{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
+          "(#{table_name}.is_private = #{connection.quoted_false} OR (#{table_name}.is_private = #{connection.quoted_true} AND #{user.id} IN
+            (SELECT wch.user_id FROM watchers wch WHERE wch.watchable_id = #{table_name}.id AND wch.watchable_type = 'Issue'))
+            OR #{table_name}.author_id = #{user.id} OR #{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
         when 'own'
           user_ids = [user.id] + user.groups.map(&:id).compact
           "(#{table_name}.author_id = #{user.id} OR #{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
@@ -155,7 +157,7 @@ class Issue < ActiveRecord::Base
         when 'all'
           true
         when 'default'
-          !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
+          (self.is_private? && self.watcher_users.include?(user)) || !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
         when 'own'
           self.author == user || user.is_or_belongs_to?(assigned_to)
         else

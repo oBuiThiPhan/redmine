@@ -15,7 +15,13 @@
 <% end %>
 
 <% if @issue.safe_attribute? 'assigned_to_id' %>
-<p><%= f.select :assigned_to_id, principals_options_for_select(@issue.assignable_users, @issue.assigned_to), :include_blank => true, :required => @issue.required_attribute?('assigned_to_id') %></p>
+  <p><label><%= l(:field_assigned_to) %></label>
+    <%= f.hidden_field :assigned_to_id, value: @issue.assigned_to_id, id: "issue_assign_to_id" %>
+    <%= text_field_tag :issue_assigned_name, "#{h (@issue.assigned_to.try(:name) || params[:issue_assigned_name])}",
+      :size => 10, id: "issue_assigned_name", :required => @issue.required_attribute?('assigned_to_id') %>
+  </p>
+  <%= javascript_tag "observeAutocompleteField('issue_assigned_name', '#{escape_javascript auto_complete_assignable_users_path(project_id:  @issue.project, issue_id: @issue.id)}')" %>
+
 <% end %>
 
 <% if @issue.safe_attribute?('category_id') && @issue.project.issue_categories.any? %>

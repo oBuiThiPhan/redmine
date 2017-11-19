@@ -82,6 +82,8 @@ group :development do
   gem "rdoc", "~> 4.3"
   gem "yard"
 end
+gem "byebug", platform: :mri
+gem "pry-rails"
 
 group :test do
   gem "rails-dom-testing"
@@ -91,6 +93,10 @@ group :test do
   gem 'puma', '~> 3.7'
   gem "capybara", '~> 2.13'
   gem "selenium-webdriver"
+end
+
+group :production do
+  gem 'rails_12factor'
 end
 
 local_gemfile = File.join(File.dirname(__FILE__), "Gemfile.local")

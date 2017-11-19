@@ -1,0 +1,7 @@
+<%= raw @assignable_users.map {|assignable_user| {
+      'id' => assignable_user.id,
+      'label' => "#{h assignable_user.name}",
+      'value' => assignable_user.id
+      }
+    }.to_json
+%>

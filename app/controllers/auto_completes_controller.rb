@@ -41,6 +41,13 @@ class AutoCompletesController < ApplicationController
     render :layout => false
   end
 
+  def assignable_users
+    @issue = Issue.find_by(id: params[:issue_id]) || @project.issues.build
+    q = (params[:q] || params[:term]).to_s.strip
+    @assignable_users = User.where(id: @issue.assignable_users.pluck(:id)).like(q)
+    render :layout => false
+  end
+
   private
 
   def find_project

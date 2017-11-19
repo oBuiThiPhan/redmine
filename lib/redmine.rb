@@ -91,7 +91,7 @@ Redmine::AccessControl.map do |map|
   map.project_module :issue_tracking do |map|
     # Issues
     map.permission :view_issues, {:issues => [:index, :show],
-                                  :auto_complete => [:issues],
+                                  :auto_complete => [:issues, :assignable_users],
                                   :context_menus => [:issues],
                                   :versions => [:index, :show, :status_by],
                                   :journals => [:index, :diff],

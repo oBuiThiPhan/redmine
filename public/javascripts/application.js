@@ -543,12 +543,31 @@ function updateBulkEditFrom(url) {
 
 function observeAutocompleteField(fieldId, url, options) {
   $(document).ready(function() {
+    var oldAssignedId = $("input#issue_assign_to_id").val();
+    var oldAssignedName = $('#'+fieldId).val();
     $('#'+fieldId).autocomplete($.extend({
       source: url,
       minLength: 2,
       position: {collision: "flipfit"},
       search: function(){$('#'+fieldId).addClass('ajax-loading');},
-      response: function(){$('#'+fieldId).removeClass('ajax-loading');}
+      change: function(event, ui){
+        if (event.target.id == "issue_assigned_name" && ui.item == null){
+          if ($(event.target).val()== ""){
+            $("input#issue_assign_to_id").val("");
+          }else{
+            $("input#issue_assign_to_id").val(oldAssignedId);
+            $(event.target).val(oldAssignedName);
+          }
+        }
+      },
+      select: function(event, ui){
+        if (event.target.id == "issue_assigned_name"){
+          $("input#issue_assign_to_id").val(ui.item.value);
+          event.preventDefault();
+          $(event.target).val(ui.item.label);
+        }
+      },
+      response: function(event, ui){$('#'+fieldId).removeClass('ajax-loading');}
     }, options));
     $('#'+fieldId).addClass('autocomplete');
   });

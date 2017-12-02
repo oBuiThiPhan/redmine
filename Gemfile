@@ -81,6 +81,8 @@ end
 group :development do
   gem "rdoc", "~> 4.3"
   gem "yard"
+  gem "byebug", platform: :mri
+  gem "pry-rails"
 end
 
 group :test do

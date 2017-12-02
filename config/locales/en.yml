@@ -376,6 +376,8 @@ en:
   field_full_width_layout: Full width layout
   field_digest: Checksum
   field_default_assigned_to: Default assignee
+  field_report_date: Report date
+  field_link_file: Link file
 
   setting_app_title: Application title
   setting_app_subtitle: Application subtitle

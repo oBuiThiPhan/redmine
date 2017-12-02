@@ -16,8 +16,25 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class ReportsController < ApplicationController
-  menu_item :issues
-  before_action :find_project, :authorize, :find_issue_statuses
+  include SortHelper
+  helper :sort
+
+  menu_item :issues, except: :index
+  before_action :find_project, :authorize, :find_issue_statuses, except: :index
+  before_action :require_login, only: :index
+
+  def index
+    sort_init 'id', 'asc'
+    sort_update %w(id name report_date status type_report)
+    @limit = per_page_option
+    scope = Report.all.includes(:user)
+    scope = scope.with_type(params[:type_report]) if params[:type_report].present?
+    scope = scope.report_at(params[:report_date]) if params[:report_date].present?
+    @report_count = scope.count
+    @report_pages = Paginator.new @report_count, @limit, params['page']
+    @offset ||= @report_pages.offset
+    @reports =  scope.order(sort_clause).limit(@limit).offset(@offset).to_a
+  end
 
   def issue_report
     @trackers = @project.rolled_up_trackers(false).visible
@@ -78,6 +95,14 @@ class ReportsController < ApplicationController
       @report_title = l(:field_subproject)
     else
       render_404
+    end
+  end
+
+  def current_menu_item
+    if [:index].include?(action_name.to_sym)
+      :reports
+    else
+      super
     end
   end
 

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  report_date: 2017-12-01 22:35:26
+  user_id: 1
+  type_report: 1
+  status: 1
+  link_file: MyString
+
+two:
+  name: MyString
+  report_date: 2017-12-01 22:35:26
+  user_id: 1
+  type_report: 1
+  status: 1
+  link_file: MyString

@@ -262,6 +262,8 @@ tr.issue td.relations span {white-space: nowrap;}
 table.issues td.description, table.issues td.last_notes {color:#777; font-size:90%; padding:4px 4px 4px 24px; text-align:left; white-space:normal;}
 table.issues td.description pre, table.issues td.last_notes pre {white-space:normal;}
 
+table.reports td.name {white-space:normal; padding-left: 24px; width:25%;}
+
 tr.issue.idnt td.subject {background: url(../images/bullet_arrow_right.png) no-repeat 0 50%;}
 tr.issue.idnt-1 td.subject {padding-left: 24px; background-position: 8px 50%;}
 tr.issue.idnt-2 td.subject {padding-left: 40px; background-position: 24px 50%;}

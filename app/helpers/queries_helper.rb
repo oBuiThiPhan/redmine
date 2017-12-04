@@ -370,7 +370,7 @@ module QueriesHelper
 
     tags
   end
- 
+
   def query_hidden_sort_tag(query)
     hidden_field_tag("sort", query.sort_criteria.to_param, :id => nil)
   end

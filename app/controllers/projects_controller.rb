@@ -16,6 +16,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class ProjectsController < ApplicationController
+  include QueriesHelper
+  include ProjectsHelper
+  include CustomFieldsHelper
   menu_item :overview
   menu_item :settings, :only => :settings
   menu_item :projects, :only => [:index, :new, :copy, :create]
@@ -41,7 +44,8 @@ class ProjectsController < ApplicationController
       return
     end
 
-    scope = Project.visible.sorted
+    scope = Project.visible.sorted.like(params[:name])
+    @project_custom_fileds = (scope.any? ? scope.first : Project.new).custom_field_values
 
     respond_to do |format|
       format.html {
@@ -58,6 +62,10 @@ class ProjectsController < ApplicationController
       format.atom {
         projects = scope.reorder(:created_on => :desc).limit(Setting.feeds_limit.to_i).to_a
         render_feed(projects, :title => "#{Setting.app_title}: #{l(:label_project_latest)}")
+      }
+      format.csv {
+        @projects = scope.to_a
+        send_data(project_to_csv(@projects), :type => 'text/csv; header=present', :filename => 'projects.csv')
       }
     end
   end

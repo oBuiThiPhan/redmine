@@ -246,6 +246,7 @@ en:
   mail_body_settings_updated: "The following settings were changed:"
   mail_body_password_updated: "Your password has been changed."
 
+  field_id: "#"
   field_name: Name
   field_description: Description
   field_summary: Summary
@@ -376,6 +377,10 @@ en:
   field_full_width_layout: Full width layout
   field_digest: Checksum
   field_default_assigned_to: Default assignee
+  field_finished_at: Fisished at
+  field_start_at: start at
+  field_test_2: test 2
+  field_test_feild_1: test 1
 
   setting_app_title: Application title
   setting_app_subtitle: Application subtitle

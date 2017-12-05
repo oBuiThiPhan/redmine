@@ -246,6 +246,7 @@ en:
   mail_body_settings_updated: "The following settings were changed:"
   mail_body_password_updated: "Your password has been changed."
 
+  field_id: "#"
   field_name: Name
   field_description: Description
   field_summary: Summary
@@ -553,6 +554,7 @@ en:
   label_project: Project
   label_project_new: New project
   label_project_plural: Projects
+  label_project_list_plural: List projects
   label_x_projects:
     zero:  no projects
     one:   1 project

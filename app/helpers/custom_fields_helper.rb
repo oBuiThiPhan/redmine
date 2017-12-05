@@ -55,7 +55,7 @@ module CustomFieldsHelper
     items = []
     items << [l(:label_custom_field_plural), custom_fields_path]
     items << [l(custom_field.type_name), custom_fields_path(:tab => custom_field.class.name)] if custom_field
-    items << (custom_field.nil? || custom_field.new_record? ? l(:label_custom_field_new) : custom_field.name) 
+    items << (custom_field.nil? || custom_field.new_record? ? l(:label_custom_field_new) : custom_field.name)
 
     title(*items)
   end
@@ -92,7 +92,7 @@ module CustomFieldsHelper
     css = title ? "field-description" : nil
     content_tag 'span', custom_field.name, :title => title, :class => css
   end
-  
+
   # Return custom field label tag
   def custom_field_label_tag(name, custom_value, options={})
     required = options[:required] || custom_value.custom_field.is_required?
@@ -146,7 +146,7 @@ module CustomFieldsHelper
   def render_custom_field_values(object, &block)
     object.visible_custom_field_values.each do |custom_value|
       formatted = show_value(custom_value)
-      if formatted.present?
+      if (object.is_a?(Project) && [:list].include?(action_name.to_sym)) || formatted.present?
         yield custom_value.custom_field, formatted
       end
     end

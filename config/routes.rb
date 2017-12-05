@@ -99,6 +99,7 @@ Rails.application.routes.draw do
   post 'issues/:object_id/watchers', :to => 'watchers#create', :object_type => 'issue'
   delete 'issues/:object_id/watchers/:user_id' => 'watchers#destroy', :object_type => 'issue'
 
+  get "/projects_list", to: "projects#list", as: "projects_list"
   resources :projects do
     collection do
       get 'autocomplete'
@@ -156,7 +157,7 @@ Rails.application.routes.draw do
         end
       end
     end
-  
+
     match 'wiki/index', :controller => 'wiki', :action => 'index', :via => :get
     resources :wiki, :except => [:index, :create], :as => 'wiki_page' do
       member do

@@ -88,6 +88,7 @@ class User < Principal
   has_one :api_token, lambda {where "action='api'"}, :class_name => 'Token'
   has_one :email_address, lambda {where :is_default => true}, :autosave => true
   has_many :email_addresses, :dependent => :delete_all
+  has_many :reports, dependent: :destroy
   belongs_to :auth_source
 
   scope :logged, lambda { where("#{User.table_name}.status <> #{STATUS_ANONYMOUS}") }
@@ -604,24 +605,24 @@ class User < Principal
     # eg. project.children.visible(user)
     Project.unscoped do
       return @project_ids_by_role if @project_ids_by_role
-  
+
       group_class = anonymous? ? GroupAnonymous : GroupNonMember
       group_id = group_class.pluck(:id).first
-  
+
       members = Member.joins(:project, :member_roles).
         where("#{Project.table_name}.status <> 9").
         where("#{Member.table_name}.user_id = ? OR (#{Project.table_name}.is_public = ? AND #{Member.table_name}.user_id = ?)", self.id, true, group_id).
         pluck(:user_id, :role_id, :project_id)
-  
+
       hash = {}
       members.each do |user_id, role_id, project_id|
         # Ignore the roles of the builtin group if the user is a member of the project
         next if user_id != id && project_ids.include?(project_id)
-  
+
         hash[role_id] ||= []
         hash[role_id] << project_id
       end
-  
+
       result = Hash.new([])
       if hash.present?
         roles = Role.where(:id => hash.keys).to_a

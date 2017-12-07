@@ -218,6 +218,8 @@ Redmine::MenuManager.map :application_menu do |menu|
   menu.push :news, {:controller => 'news', :action => 'index'},
     :if => Proc.new {User.current.allowed_to?(:view_news, nil, :global => true)},
     :caption => :label_news_plural
+  menu.push :reports, {:controller => 'reports', :action => 'index'},
+    :if => Proc.new {User.current.logged?}, :caption => :label_report_plural
 end
 
 Redmine::MenuManager.map :admin_menu do |menu|

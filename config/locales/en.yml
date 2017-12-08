@@ -132,6 +132,7 @@ en:
         earlier_than_minimum_start_date: "cannot be earlier than %{date} because of preceding issues"
         not_a_regexp: "is not a valid regular expression"
         open_issue_with_closed_parent: "An open issue cannot be attached to a closed parent task"
+        due_date_greater_than_parent: "Due date must less than parent issue due date(%{parent_due_date})"
 
   actionview_instancetag_blank_option: Please select
 

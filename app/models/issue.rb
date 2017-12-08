@@ -68,7 +68,7 @@ class Issue < ActiveRecord::Base
   validates :estimated_hours, :numericality => {:greater_than_or_equal_to => 0, :allow_nil => true, :message => :invalid}
   validates :start_date, :date => true
   validates :due_date, :date => true
-  validate :validate_issue, :validate_required_fields, :validate_permissions
+  validate :validate_issue, :validate_required_fields, :validate_permissions, :validate_child_due_date
 
   scope :visible, lambda {|*args|
     joins(:project).
@@ -493,7 +493,7 @@ class Issue < ActiveRecord::Base
       names |= %w(project_id)
     end
     if dates_derived?
-      names -= %w(start_date due_date)
+      names -= %w(start_date)
     end
     if priority_derived?
       names -= %w(priority_id)
@@ -753,6 +753,12 @@ class Issue < ActiveRecord::Base
           errors.add :parent_issue_id, :invalid
         end
       end
+    end
+  end
+
+  def validate_child_due_date
+    if @parent_issue && @parent_issue.due_date && due_date && @parent_issue.due_date < due_date
+      errors.add :due_date, :due_date_greater_than_parent, :parent_due_date => @parent_issue.due_date.strftime("%d/%m/%y")
     end
   end
 
